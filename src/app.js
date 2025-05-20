@@ -2,6 +2,8 @@ import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import userRouter from "./routes/user.routes.js"
+import vaultRouter from "./routes/vault.routes.js"
+import savedPasswordRouter from "./routes/savedPasswords.routes.js"
 
 const app = express()
 
@@ -25,6 +27,8 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 app.use("/api/v1/users", userRouter)
+app.use("/api/v1/vault", vaultRouter)
+app.use("/api/v1/spa",savedPasswordRouter)
 
 export { app }
 

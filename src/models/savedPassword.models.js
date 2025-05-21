@@ -12,10 +12,11 @@ const savedPasswordsSchema = new Schema({
     }
 }, { timestamps: true })
 
-savedPasswordsSchema.pre("save",async function (save) {
+
+savedPasswordsSchema.pre("save",async function (next) {
     if(!this.isModified("value")) return next();
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password,salt);
+    this.value = await bcrypt.hash(this.value, salt);
     next();
 })
 

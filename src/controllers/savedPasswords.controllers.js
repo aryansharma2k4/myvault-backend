@@ -30,6 +30,26 @@ const deleteKeyValue = asyncHandler(async(req, res) => {
     return res.status(200).json(new ApiResponse(200, {}, "Password Deleted Successfully"))
 })
 
+const editKeyValue = asyncHandler(async( req, res ) => {
+    const { id } = req.params;
+    const { newKey, newValue } = req.body;
+    if([newKey, newValue].some((fields) => fields.trim() === '')){
+        throw new ApiError(400, "Please Provide new complete Password or Application details")
+    }
+    const editKeyValue = await SavedPassword.findByIdAndUpdate(
+        id,
+        { $set: { key: newKey, value: newValue } },
+        { new: true }
+    )
+    if(!editKeyValue){
+        throw new ApiError(500, "Error saving the new edited values")
+    }
+    return res.status(200).json(
+        new ApiResponse(200, editKeyValue, "Formed Changes successfully")
+    )
+})
 
 
-export { addKeyValue, deleteKeyValue }
+
+
+export { addKeyValue, deleteKeyValue, editKeyValue }

@@ -158,6 +158,20 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 })
 
+const getUser = asyncHandler(async( req, res) => {
+    const { id } = req.params;
+    if(id === ''){
+        throw new ApiError(400, "Provide a proper ID of the user")
+    }
+    const user = await User.findById(id);
+    if(!user){
+        throw new ApiError(409, "Unable to find that user please provider a proper id")
+    }
+    return res.status(200).json(
+        new ApiResponse(200, user, "User fetched Successfully")
+    )
+})
+
 
 
 
@@ -167,5 +181,6 @@ export {
     registerUser,
     loginUser,
     logoutUser,
-    refreshAccessToken
+    refreshAccessToken,
+    getUser
 }

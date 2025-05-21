@@ -19,6 +19,10 @@ const userSchema = new Schema({
     fullName: {
         type: String,
         required: true
+    },
+    vault: {
+        type: Schema.Types.ObjectId,
+        ref: "Vault"
     }
 
 }, { timestamps: true })

@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { Vault } from "../models/vault.model.js";
 
 
 const generateAccessAndRefreshTokens = async(userId) =>{
@@ -32,19 +33,30 @@ const registerUser = asyncHandler(async(req, res) => {
     if(exsistingUser){
         throw new ApiError(409, "User already exsists with the current email")
     }
+    const passwords = []
+    const userVault = await Vault.create({
+        passwords
+    })
+    if(!userVault){
+        throw new ApiError(500, "Error creating vault")
+    }
 
     //create the user
     const user = await User.create({
         fullName,
         email,
-        password
+        password,
+        vault: userVault._id
     });
 
+
     const { accessToken } = await generateAccessAndRefreshTokens(user._id)
-    const createdUser = await User.findById(user._id).select("-password -refreshToken");
+    const createdUser = await User.findById(user._id).select("-password -refreshToken").populate("vault")
     if(!createdUser){
         throw new ApiError(500, "Error creating User")
     } 
+    
+
     return res.status(201).json(
         new ApiResponse(200, {user: createdUser, accessToken }, "User resgistered successfully")
     )

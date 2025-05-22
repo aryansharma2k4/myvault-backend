@@ -49,7 +49,21 @@ const editKeyValue = asyncHandler(async( req, res ) => {
     )
 })
 
+const getPasswordById = asyncHandler( async( req, res ) => {
+    const { id } = req.params;
+    if(!id){
+        throw new ApiError(409, "Please provide a proper ID")
+    }
+    const password = await SavedPassword.findById(id);
+    if(!password){
+        throw new ApiError(404, "Unable to find the requested password with this ID")
+    }
+    return res.status(200).json(
+        new ApiResponse(200, password, "Password fetched successfully")
+    )
+})
 
 
 
-export { addKeyValue, deleteKeyValue, editKeyValue }
+
+export { addKeyValue, deleteKeyValue, editKeyValue, getPasswordById }

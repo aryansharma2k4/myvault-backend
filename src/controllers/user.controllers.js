@@ -123,6 +123,13 @@ const logoutUser = asyncHandler(async (req, res) =>{
 
 })
 
+const checkToken = asyncHandler(async(req, res) => {
+    return res.status(200).json(
+        new ApiResponse(200, "Token Is Correct")
+    )
+})
+
+
 const refreshAccessToken = asyncHandler(async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
     if(!incomingRefreshToken){
@@ -194,5 +201,6 @@ export {
     loginUser,
     logoutUser,
     refreshAccessToken,
-    getUser
+    getUser,
+    checkToken
 }
